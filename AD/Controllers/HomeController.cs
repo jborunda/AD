@@ -55,44 +55,42 @@ namespace AD.Controllers
             DirectorySearcher dirSearch = null;
             string givenName = "";
             string mail = "";
-            string sn = "";
+            string lastName = "";
+            string samAcct = "";
             Debug.WriteLine(ad.domain);
 
-            if (dirSearch == null)
+            
+            
+            DirectoryEntry dirEntry = new DirectoryEntry(ad.domain, ad.userName, ad.password);
+            dirSearch = new DirectorySearcher(dirEntry);
+
+            dirSearch.Filter = "(&((&(objectCategegory=Person)(objectClass=User)))(samaccountname=" + ad.userName + "))";
+            dirSearch.SearchScope = SearchScope.Subtree;
+                
+            try
             {
-                DirectoryEntry dirEntry = new DirectoryEntry(ad.domain, ad.userName, ad.password);
-                dirSearch = new DirectorySearcher(dirEntry);
-
-                dirSearch.Filter = "(&((&(objectCategegory=Person)(objectClass=User)))(samaccountname=" + ad.userName + "))";
-                dirSearch.SearchScope = SearchScope.Subtree;
-                
-                try
-                {
                     
-                    SearchResult userObject = dirSearch.FindOne();
-                    Debug.WriteLine("***" + userObject);
-                    if (userObject.GetDirectoryEntry().Properties["samaccountname"].Value != null)
-                        givenName = "Username : " + userObject.GetDirectoryEntry().Properties["samaccountname"].Value.ToString();
-                    Debug.WriteLine("***" + userObject.GetDirectoryEntry().Properties["samaccountname"].Value);
-                    if (userObject.GetDirectoryEntry().Properties["givenName"].Value != null)
-                        givenName = "First Name : " + userObject.GetDirectoryEntry().Properties["givenName"].Value.ToString();
+            SearchResult userObject = dirSearch.FindOne();
+            Debug.WriteLine("***" + userObject);
+            if (userObject.GetDirectoryEntry().Properties["samaccountname"].Value != null)
+                samAcct = "Username : " + userObject.GetDirectoryEntry().Properties["samaccountname"].Value.ToString();
+            Debug.WriteLine("***" + userObject.GetDirectoryEntry().Properties["samaccountname"].Value);
+            if (userObject.GetDirectoryEntry().Properties["givenName"].Value != null)
+                givenName = "First Name : " + userObject.GetDirectoryEntry().Properties["givenName"].Value.ToString();
 
-                    if (userObject.GetDirectoryEntry().Properties["sn"].Value != null)
-                        sn = "Last Name : " + userObject.GetDirectoryEntry().Properties["sn"].Value.ToString();
+            if (userObject.GetDirectoryEntry().Properties["sn"].Value != null)
+                lastName = "Last Name : " + userObject.GetDirectoryEntry().Properties["sn"].Value.ToString();
 
-                    if (userObject.GetDirectoryEntry().Properties["mail"].Value != null)
-                        mail = "Email ID : " + userObject.GetDirectoryEntry().Properties["mail"].Value.ToString();
-                    return Content(givenName);
-                } catch (Exception)
-                {
-                    Console.WriteLine("Exception error");
-                }
-
-                
-                
+            if (userObject.GetDirectoryEntry().Properties["mail"].Value != null)
+                mail = "Email ID : " + userObject.GetDirectoryEntry().Properties["mail"].Value.ToString();
+            return Content(givenName);
+            } catch (Exception)
+            {
+               Console.WriteLine("Exception error");
             }
 
-        return Content("nothing happen");
+            return Content(givenName,samAcct);
+        
         }
     }
 }
