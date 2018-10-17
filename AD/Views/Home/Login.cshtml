@@ -1,0 +1,33 @@
+﻿@model AD.Models.AD_info
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("Login", "Home", FormMethod.Post))
+{<body>
+    <div class="bg-display">
+        <div class="login-container">
+            <form>
+                <div class="logo">
+                    <img src="~/Images/ProbBadge.png" alt="LA COUNTY PROBATION LOGO" />
+                </div>
+                <span class="login-title"> Probation Department </span>
+                <div>
+                    <input class="input-box form-control" type="text" placeholder="Username" @Html.TextBoxFor(Model => Model.userName)>
+                </div>
+                <div>
+                    <input class="input-box form-control" type="text" placeholder="Password" @Html.TextBoxFor(Model => Model.password)>
+                </div>
+                <div>
+                    <input class="input-box form-control" type="text" placeholder="domain" @Html.TextBoxFor(Model => Model.domain)>
+                </div>
+                <button type="submit" class="btn btn-info btn-right" value="submit"> Login </button>
+                <i data-container="body" data-toggle="popover" data-placement="right"
+                   data-content="Questions related to the probvation online systems registration,
+                                    please contact ISB Help Desk at (866) 607-3171 or by email at sysregdesk@probation.lacounty.gov"
+                   data-original-title="HINT: The username and password are the same sa your network username and password">Help</i>
+            </form>
+        </div>
+    </div>
+</body>
+}
