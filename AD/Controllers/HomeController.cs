@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using AD.Models;
 using System.DirectoryServices;
 
+//using System.DirectoryServices.AccountManagement;
 
 
 namespace AD.Controllers
@@ -57,48 +58,69 @@ namespace AD.Controllers
 
             try
             {
-                Debug.WriteLine("try");
+                
+                DirectoryEntry dirEntry = new DirectoryEntry("LDAP://" + ad.domain, ad.userName, ad.password); 
 
-                DirectoryEntry dirEntry = new DirectoryEntry("LDAP://" + ad.domain, ad.userName, ad.password); Debug.WriteLine(dirEntry);
+                DirectorySearcher dirSearch = new DirectorySearcher(dirEntry, "(objectClass=user)");
+                //PrincipalContext pc = new PrincipalContext(ContextType.Domain, "YOURDOMAIN");
 
-                DirectorySearcher dirSearch = new DirectorySearcher(dirEntry, "(objectClass=user)"); Debug.WriteLine(dirSearch);
                 dirSearch.Filter = String.Format("(&(SAMAccountName={0}))", ad.userName);
                 dirSearch.PropertiesToLoad.Add("givenName");
                 dirSearch.PropertiesToLoad.Add("mail");
-                dirSearch.PropertiesToLoad.Add("cn");                          //'Full Name + EmpNo
-                dirSearch.PropertiesToLoad.Add("SAMAccountName");              //'EMPNO
-                dirSearch.PropertiesToLoad.Add("givenName");             //'First Name
-                dirSearch.PropertiesToLoad.Add("sn");                  //'Last Name
-                dirSearch.PropertiesToLoad.Add("mail");                        //'Email
-                dirSearch.PropertiesToLoad.Add("title");                       //'job title
-                dirSearch.PropertiesToLoad.Add("department");                  //'Department
-                dirSearch.PropertiesToLoad.Add("telephoneNumber");             //'Telephone
-                dirSearch.PropertiesToLoad.Add("physicalDeliveryOfficeName");  //'Area Office
-                dirSearch.PropertiesToLoad.Add("streetAddress"); //'Area Office address
-                dirSearch.PropertiesToLoad.Add("l");                             //'city
-                dirSearch.PropertiesToLoad.Add("st");                          //'state
-                dirSearch.PropertiesToLoad.Add("postalCode");                  //'zipcode
-                dirSearch.PropertiesToLoad.Add("Manager");                     //'manager
+                dirSearch.PropertiesToLoad.Add("cn");                           //'Full Name + EmpNo
+                dirSearch.PropertiesToLoad.Add("SAMAccountName");               //'EMPNO
+                dirSearch.PropertiesToLoad.Add("givenName");                    //'First Name
+                dirSearch.PropertiesToLoad.Add("sn");                           //'Last Name
+                dirSearch.PropertiesToLoad.Add("mail");                         //'Email
+                dirSearch.PropertiesToLoad.Add("title");                        //'job title
+                dirSearch.PropertiesToLoad.Add("department");                   //'Department
+                dirSearch.PropertiesToLoad.Add("telephoneNumber");              //'Telephone
+                dirSearch.PropertiesToLoad.Add("physicalDeliveryOfficeName");   //'Area Office
+                dirSearch.PropertiesToLoad.Add("streetAddress");                //'Area Office address
+                dirSearch.PropertiesToLoad.Add("l");                            //'city
+                dirSearch.PropertiesToLoad.Add("st");                           //'state
+                dirSearch.PropertiesToLoad.Add("postalCode");                   //'zipcode
+                dirSearch.PropertiesToLoad.Add("Manager");                      //'manager
 
                 SearchResult objResult = dirSearch.FindOne();
 
                 if (objResult.GetDirectoryEntry().Properties["samaccountname"].Value != null)
                 {
-                   // employee.samAcct = "Username : " + objResult.GetDirectoryEntry().Properties["samaccountname"].Value.ToString();
+                    employee.Employee_Number = "Username : " + objResult.GetDirectoryEntry().Properties["samaccountname"].Value.ToString();
                 }
 
                 if (objResult.GetDirectoryEntry().Properties["givenName"].Value != null)
                 {
-                    employee.First_Name = "First Name : " + objResult.GetDirectoryEntry().Properties["givenName"].Value.ToString();
+                    employee.First_Name = objResult.GetDirectoryEntry().Properties["givenName"].Value.ToString();
                 }
                 if (objResult.GetDirectoryEntry().Properties["sn"].Value != null)
                 {
-                    employee.Last_Name = "Last Name : " + objResult.GetDirectoryEntry().Properties["sn"].Value.ToString();
+                    employee.Last_Name = objResult.GetDirectoryEntry().Properties["sn"].Value.ToString();
                 }
 
                 if (objResult.GetDirectoryEntry().Properties["mail"].Value != null)
                 {
-                    employee.Email = "Email ID : " + objResult.GetDirectoryEntry().Properties["mail"].Value.ToString();
+                    employee.Email = objResult.GetDirectoryEntry().Properties["mail"].Value.ToString();
+                }
+                if (objResult.GetDirectoryEntry().Properties["title"].Value != null)
+                {
+                    employee.Payroll_Title = objResult.GetDirectoryEntry().Properties["title"].Value.ToString();
+                }
+                if (objResult.GetDirectoryEntry().Properties["department"].Value != null)
+                {
+                    employee.Department = objResult.GetDirectoryEntry().Properties["department"].Value.ToString();
+                }
+                if (objResult.GetDirectoryEntry().Properties["telephoneNumber"].Value != null)
+                {
+                    employee.Employee_Number = objResult.GetDirectoryEntry().Properties["telephoneNumber"].Value.ToString();
+                }
+                if (objResult.GetDirectoryEntry().Properties["physicalDeliveryOfficeName"].Value != null)
+                {
+                    employee.Employee_Number = objResult.GetDirectoryEntry().Properties["physicalDeliveryOfficeName"].Value.ToString();
+                }
+                if (objResult.GetDirectoryEntry().Properties["streetAddress"].Value != null)
+                {
+                    employee.Employee_Number = objResult.GetDirectoryEntry().Properties["streetAddress"].Value.ToString();
                 }
 
 
@@ -107,7 +129,8 @@ namespace AD.Controllers
             {
                 return Content(ex.ToString());
             }
-            return Content(employee.Email + employee.First_Name + employee.Last_Name);
+            //return Content(employee.Email + employee.First_Name + employee.Last_Name);
+            return View("EmployeeMainPage");
         }
     }
 }
