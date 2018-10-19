@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using AD.Models;
 using System.DirectoryServices;
 
+
+
 namespace AD.Controllers
 {
     public class HomeController : Controller
@@ -49,48 +51,68 @@ namespace AD.Controllers
         }
         [HttpPost]
         public IActionResult Login(AD_info ad)
-
         {
-            
-            string givenName = "";
-            string mail = "";
-            string lastName = "";
-            string samAcct = "";
-            Debug.WriteLine(ad.domain);
-            Debug.WriteLine(ad.userName);
-            
 
+            Employee employee = new Employee();
 
             try
             {
-                                                                                                                            
-                DirectoryEntry dirEntry = new DirectoryEntry("LDAP://" + ad.domain, ad.userName, ad.password);              Debug.WriteLine(dirEntry);
+                Debug.WriteLine("try");
 
-                DirectorySearcher dirSearch = new DirectorySearcher(dirEntry);                                              Debug.WriteLine(dirSearch);
+                DirectoryEntry dirEntry = new DirectoryEntry("LDAP://" + ad.domain, ad.userName, ad.password); Debug.WriteLine(dirEntry);
+
+                DirectorySearcher dirSearch = new DirectorySearcher(dirEntry, "(objectClass=user)"); Debug.WriteLine(dirSearch);
                 dirSearch.Filter = String.Format("(&(SAMAccountName={0}))", ad.userName);
-
                 dirSearch.PropertiesToLoad.Add("givenName");
+                dirSearch.PropertiesToLoad.Add("mail");
+                dirSearch.PropertiesToLoad.Add("cn");                          //'Full Name + EmpNo
+                dirSearch.PropertiesToLoad.Add("SAMAccountName");              //'EMPNO
+                dirSearch.PropertiesToLoad.Add("givenName");             //'First Name
+                dirSearch.PropertiesToLoad.Add("sn");                  //'Last Name
+                dirSearch.PropertiesToLoad.Add("mail");                        //'Email
+                dirSearch.PropertiesToLoad.Add("title");                       //'job title
+                dirSearch.PropertiesToLoad.Add("department");                  //'Department
+                dirSearch.PropertiesToLoad.Add("telephoneNumber");             //'Telephone
+                dirSearch.PropertiesToLoad.Add("physicalDeliveryOfficeName");  //'Area Office
+                dirSearch.PropertiesToLoad.Add("streetAddress"); //'Area Office address
+                dirSearch.PropertiesToLoad.Add("l");                             //'city
+                dirSearch.PropertiesToLoad.Add("st");                          //'state
+                dirSearch.PropertiesToLoad.Add("postalCode");                  //'zipcode
+                dirSearch.PropertiesToLoad.Add("Manager");                     //'manager
 
                 SearchResult objResult = dirSearch.FindOne();
-                                 
-                
-                
 
+                if (objResult.GetDirectoryEntry().Properties["samaccountname"].Value != null)
+                {
+                   // employee.samAcct = "Username : " + objResult.GetDirectoryEntry().Properties["samaccountname"].Value.ToString();
+                }
 
-              
+                if (objResult.GetDirectoryEntry().Properties["givenName"].Value != null)
+                {
+                    employee.First_Name = "First Name : " + objResult.GetDirectoryEntry().Properties["givenName"].Value.ToString();
+                }
+                if (objResult.GetDirectoryEntry().Properties["sn"].Value != null)
+                {
+                    employee.Last_Name = "Last Name : " + objResult.GetDirectoryEntry().Properties["sn"].Value.ToString();
+                }
+
+                if (objResult.GetDirectoryEntry().Properties["mail"].Value != null)
+                {
+                    employee.Email = "Email ID : " + objResult.GetDirectoryEntry().Properties["mail"].Value.ToString();
+                }
+
 
             }
-            catch (System.Runtime.InteropServices.COMException)
+            catch (System.Runtime.InteropServices.COMException ex)
             {
-                                                                                                                            Debug.WriteLine("try");
-                return Content("System.Runtime.InteropServices.COMException");
+                return Content(ex.ToString());
             }
-            
-            return Content("controller ends ");
-        
+            return Content(employee.Email + employee.First_Name + employee.Last_Name);
         }
     }
 }
+    
+    
 /*
 givenName = objResult.Properties("givenName")[0];
                 Session("Last_Name") = SResult.Properties("sn")(0).ToString()
@@ -132,19 +154,19 @@ Try
  * try
             {
                     
-            SearchResult userObject = dirSearch.FindOne();
-            Debug.WriteLine("***" + userObject);
-            if (userObject.GetDirectoryEntry().Properties["samaccountname"].Value != null)
-                samAcct = "Username : " + userObject.GetDirectoryEntry().Properties["samaccountname"].Value.ToString();
-            Debug.WriteLine("***" + userObject.GetDirectoryEntry().Properties["samaccountname"].Value);
-            if (userObject.GetDirectoryEntry().Properties["givenName"].Value != null)
-                givenName = "First Name : " + userObject.GetDirectoryEntry().Properties["givenName"].Value.ToString();
+            SearchResult objResult = dirSearch.FindOne();
+            Debug.WriteLine("***" + objResult);
+            if (objResult.GetDirectoryEntry().Properties["samaccountname"].Value != null)
+                samAcct = "Username : " + objResult.GetDirectoryEntry().Properties["samaccountname"].Value.ToString();
+            Debug.WriteLine("***" + objResult.GetDirectoryEntry().Properties["samaccountname"].Value);
+            if (objResult.GetDirectoryEntry().Properties["givenName"].Value != null)
+                givenName = "First Name : " + objResult.GetDirectoryEntry().Properties["givenName"].Value.ToString();
 
-            if (userObject.GetDirectoryEntry().Properties["sn"].Value != null)
-                lastName = "Last Name : " + userObject.GetDirectoryEntry().Properties["sn"].Value.ToString();
+            if (objResult.GetDirectoryEntry().Properties["sn"].Value != null)
+                lastName = "Last Name : " + objResult.GetDirectoryEntry().Properties["sn"].Value.ToString();
 
-            if (userObject.GetDirectoryEntry().Properties["mail"].Value != null)
-                mail = "Email ID : " + userObject.GetDirectoryEntry().Properties["mail"].Value.ToString();
+            if (objResult.GetDirectoryEntry().Properties["mail"].Value != null)
+                mail = "Email ID : " + objResult.GetDirectoryEntry().Properties["mail"].Value.ToString();
             return Content(givenName,mail);
             } catch (Exception)
             {
