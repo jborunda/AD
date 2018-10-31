@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using AD.Models;
+
 
 namespace AD
 {
@@ -33,6 +36,9 @@ namespace AD
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<ADContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("ADContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,11 +58,12 @@ namespace AD
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
+            app.UseMvc( routes =>
             {
+                
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Login}/{id?}");
+                    template: "{controller=Employees}/{action=index}/{id?}");
             });
         }
     }

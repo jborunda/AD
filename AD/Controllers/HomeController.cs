@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AD.Models;
-using System.DirectoryServices;
+using System.DirectoryServices; 
 
 //using System.DirectoryServices.AccountManagement;
 
@@ -14,6 +14,9 @@ namespace AD.Controllers
 {
     public class HomeController : Controller
     {
+        
+        public readonly ADContext _context;
+
         public IActionResult Index()
         {
             return View();
@@ -43,18 +46,23 @@ namespace AD.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
         [HttpGet]
+        [Route("Home/Login/")]
         public IActionResult Login()
         {
-
-
-            return View();
+               return View();
         }
+
+
         [HttpPost]
         public IActionResult Login(AD_info ad)
         {
 
+
             Employee employee = new Employee();
+
 
             try
             {
@@ -62,7 +70,7 @@ namespace AD.Controllers
                 DirectoryEntry dirEntry = new DirectoryEntry("LDAP://" + ad.domain, ad.userName, ad.password); 
 
                 DirectorySearcher dirSearch = new DirectorySearcher(dirEntry, "(objectClass=user)");
-                //PrincipalContext pc = new PrincipalContext(ContextType.Domain, "YOURDOMAIN");
+                
 
                 dirSearch.Filter = String.Format("(&(SAMAccountName={0}))", ad.userName);
                 dirSearch.PropertiesToLoad.Add("givenName");
@@ -112,7 +120,7 @@ namespace AD.Controllers
                 }
                 if (objResult.GetDirectoryEntry().Properties["telephoneNumber"].Value != null)
                 {
-                    employee.Employee_Number = objResult.GetDirectoryEntry().Properties["telephoneNumber"].Value.ToString();
+                    employee.Cell_Phone = objResult.GetDirectoryEntry().Properties["telephoneNumber"].Value.ToString();
                 }
                 if (objResult.GetDirectoryEntry().Properties["physicalDeliveryOfficeName"].Value != null)
                 {
@@ -120,79 +128,18 @@ namespace AD.Controllers
                 }
                 if (objResult.GetDirectoryEntry().Properties["streetAddress"].Value != null)
                 {
-                    employee.Employee_Number = objResult.GetDirectoryEntry().Properties["streetAddress"].Value.ToString();
+                    employee.Work_address = objResult.GetDirectoryEntry().Properties["streetAddress"].Value.ToString();
                 }
 
-
+                
             }
             catch (System.Runtime.InteropServices.COMException ex)
             {
                 return Content(ex.ToString());
             }
-            //return Content(employee.Email + employee.First_Name + employee.Last_Name);
-            return View("EmployeeMainPage");
+
+            return Content(employee.Last_Name + employee.Email + employee.Payroll_Title + employee.Department + employee.Cell_Phone + employee.Work_address + employee.Department + "mail: " + employee.Email + " first name: " + employee.First_Name + " last name: " + employee.Last_Name + " employee id: " + employee.Employee_ID + " Admin_flag :" + employee.Admin_Flag);
+
         }
     }
 }
-    
-    
-/*
-givenName = objResult.Properties("givenName")[0];
-                Session("Last_Name") = SResult.Properties("sn")(0).ToString()
-                Session("Email") = SResult.Properties("mail")(0).ToString() & ""
-                Session("Employee_Number") = SResult.Properties("SAMAccountName")(0).ToString() & ""
-                Session("Username") = strUsername
-                */
-
-
-/*
-Try
-            DirectoryEntry DEntry = New DirectoryEntry(strADFullPath, strUsername, strPassword)
-            DirectorySearcher dirSearch = New DirectorySearcher(DEntry)
-            'dirSearch.Filter = String.Format("(&(SAMAccountName={0}) (department=Probation #640))", strUsername)
-            dirSearch.Filter = String.Format("(&(SAMAccountName={0}))", strUsername)
-            dirSearch.PropertiesToLoad.Add("cn")                          'Full Name + EmpNo
-            dirSearch.PropertiesToLoad.Add("SAMAccountName")              'EMPNO
-            dirSearch.PropertiesToLoad.Add("givenName")                   'First Name
-            dirSearch.PropertiesToLoad.Add("sn")                          'Last Name
-            dirSearch.PropertiesToLoad.Add("mail")                        'Email
-            dirSearch.PropertiesToLoad.Add("title")                       'job title
-            dirSearch.PropertiesToLoad.Add("department")                  'Department
-            dirSearch.PropertiesToLoad.Add("telephoneNumber")             'Telephone
-            dirSearch.PropertiesToLoad.Add("physicalDeliveryOfficeName")  'Area Office
-            dirSearch.PropertiesToLoad.Add("streetAddress")               'Area Office address
-            dirSearch.PropertiesToLoad.Add("l")                           'city
-            dirSearch.PropertiesToLoad.Add("st")                          'state
-            dirSearch.PropertiesToLoad.Add("postalCode")                  'zipcode
-            dirSearch.PropertiesToLoad.Add("Manager")                     'manager
-
-    */
-
-/*
- * 
- * 
-            dirSearch.Filter = "(&((&(objectCategegory=Person)(objectClass=User)))(samaccountname=" + ad.userName + "))";
-            dirSearch.SearchScope = SearchScope.Subtree;
-            
- * try
-            {
-                    
-            SearchResult objResult = dirSearch.FindOne();
-            Debug.WriteLine("***" + objResult);
-            if (objResult.GetDirectoryEntry().Properties["samaccountname"].Value != null)
-                samAcct = "Username : " + objResult.GetDirectoryEntry().Properties["samaccountname"].Value.ToString();
-            Debug.WriteLine("***" + objResult.GetDirectoryEntry().Properties["samaccountname"].Value);
-            if (objResult.GetDirectoryEntry().Properties["givenName"].Value != null)
-                givenName = "First Name : " + objResult.GetDirectoryEntry().Properties["givenName"].Value.ToString();
-
-            if (objResult.GetDirectoryEntry().Properties["sn"].Value != null)
-                lastName = "Last Name : " + objResult.GetDirectoryEntry().Properties["sn"].Value.ToString();
-
-            if (objResult.GetDirectoryEntry().Properties["mail"].Value != null)
-                mail = "Email ID : " + objResult.GetDirectoryEntry().Properties["mail"].Value.ToString();
-            return Content(givenName,mail);
-            } catch (Exception)
-            {
-               Console.WriteLine("Exception error");
-            }
-*/
