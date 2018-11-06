@@ -68,17 +68,17 @@ using AD.Models;
 #line default
 #line hidden
             BeginContext(174, 1483, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "c2d39ac7f91149ed8631eda65411cfbd", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "fb00a3cf5eaf48cc817d9994340eb503", async() => {
                 BeginContext(180, 83, true);
                 WriteLiteral("\r\n    <div class=\"bg-display\">\r\n        <div class=\"login-container\">\r\n            ");
                 EndContext();
                 BeginContext(263, 1357, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "dd364067a72d4035a0f139850aa8655c", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "2793c0ea903c49739699ba6a997493b3", async() => {
                     BeginContext(269, 58, true);
                     WriteLiteral("\r\n                <div class=\"logo\">\r\n                    ");
                     EndContext();
                     BeginContext(327, 67, false);
-                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "aa41aec744f34010a6b7cf8522738eec", async() => {
+                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "d64b2c0f481e40e98199563d7a6f4019", async() => {
                     }
                     );
                     __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();

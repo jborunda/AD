@@ -15,7 +15,7 @@ namespace AD.Controllers
     public class HomeController : Controller
     {
         
-        public readonly ADContext _context;
+        public ADContext _context;
 
         public IActionResult Index()
         {
@@ -60,13 +60,13 @@ namespace AD.Controllers
         public IActionResult Login(AD_info ad)
         {
 
-
             Employee employee = new Employee();
 
 
             try
             {
                 
+               
                 DirectoryEntry dirEntry = new DirectoryEntry("LDAP://" + ad.domain, ad.userName, ad.password); 
 
                 DirectorySearcher dirSearch = new DirectorySearcher(dirEntry, "(objectClass=user)");
@@ -131,15 +131,31 @@ namespace AD.Controllers
                     employee.Work_address = objResult.GetDirectoryEntry().Properties["streetAddress"].Value.ToString();
                 }
 
+                _context.Employee.Add(employee);
+                _context.SaveChanges();
+
                 
             }
             catch (System.Runtime.InteropServices.COMException ex)
             {
                 return Content(ex.ToString());
             }
-
-            return Content(employee.Last_Name + employee.Email + employee.Payroll_Title + employee.Department + employee.Cell_Phone + employee.Work_address + employee.Department + "mail: " + employee.Email + " first name: " + employee.First_Name + " last name: " + employee.Last_Name + " employee id: " + employee.Employee_ID + " Admin_flag :" + employee.Admin_Flag);
+     
+            //the user is not registered have the user register in the register view
+            if (employee.Work_Location == null) {
+                return View("Register");
+            }
+            //the user is already registered redirect them to the request form page  
+            else
+                return Content("request form page ");
 
         }
     }
 }
+
+
+
+
+
+
+//employee.Last_Name + employee.Email + employee.Payroll_Title + employee.Department + employee.Cell_Phone + employee.Work_address + employee.Department + "mail: " + employee.Email + " first name: " + employee.First_Name + " last name: " + employee.Last_Name + " employee id: " + employee.Employee_ID + " Admin_flag :" + employee.Admin_Flag

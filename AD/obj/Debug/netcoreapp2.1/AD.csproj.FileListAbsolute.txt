@@ -5,7 +5,6 @@ C:\Users\owner\source\repos\AD\AD\bin\Debug\netcoreapp2.1\AD.dll
 C:\Users\owner\source\repos\AD\AD\bin\Debug\netcoreapp2.1\AD.pdb
 C:\Users\owner\source\repos\AD\AD\bin\Debug\netcoreapp2.1\AD.Views.dll
 C:\Users\owner\source\repos\AD\AD\bin\Debug\netcoreapp2.1\AD.Views.pdb
-C:\Users\owner\source\repos\AD\AD\obj\Debug\netcoreapp2.1\AD.csprojAssemblyReference.cache
 C:\Users\owner\source\repos\AD\AD\obj\Debug\netcoreapp2.1\AD.csproj.CoreCompileInputs.cache
 C:\Users\owner\source\repos\AD\AD\obj\Debug\netcoreapp2.1\AD.RazorAssemblyInfo.cache
 C:\Users\owner\source\repos\AD\AD\obj\Debug\netcoreapp2.1\AD.RazorAssemblyInfo.cs
@@ -37,3 +36,5 @@ C:\Users\owner\source\repos\AD\AD\obj\Debug\netcoreapp2.1\Razor\Views\Employees\
 C:\Users\owner\source\repos\AD\AD\obj\Debug\netcoreapp2.1\Razor\Views\Employees\Details.g.cshtml.cs
 C:\Users\owner\source\repos\AD\AD\obj\Debug\netcoreapp2.1\Razor\Views\Employees\Edit.g.cshtml.cs
 C:\Users\owner\source\repos\AD\AD\obj\Debug\netcoreapp2.1\Razor\Views\Employees\Index.g.cshtml.cs
+C:\Users\owner\source\repos\AD\AD\obj\Debug\netcoreapp2.1\AD.csprojAssemblyReference.cache
+C:\Users\owner\source\repos\AD\AD\obj\Debug\netcoreapp2.1\Razor\Views\Home\Register.g.cshtml.cs
